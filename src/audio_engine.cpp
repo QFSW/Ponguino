@@ -10,13 +10,14 @@ void AudioEngine::start()
     _curr_note_index = 0;
     _curr_note_remaining = decompress_duration(0);
 
-    const int frequency = decompress_frequency(0);
-    tone(AUDIO_PIN, frequency);
+    const uint16_t frequency = decompress_frequency(0);
+    play_tone(frequency);
 }
 
 void AudioEngine::tick()
 {
-    int elapsedTime = millis() - _last_tick;
+    long const timeNow = millis();
+    long const elapsedTime = timeNow - _last_tick;
     _curr_note_remaining -= elapsedTime;
 
     // Keep advacing to next note if current one is done
@@ -29,14 +30,27 @@ void AudioEngine::tick()
         }
 
         _curr_note_remaining += decompress_duration(_curr_note_index);
-        const int frequency = decompress_frequency(_curr_note_index);
-        tone(AUDIO_PIN, frequency);
+        const uint16_t frequency = decompress_frequency(_curr_note_index);
+        play_tone(frequency);
     }
 
-    _last_tick = millis();
+    _last_tick = timeNow;
 }
 
-int AudioEngine::decompress_frequency(int note_index) const
+void AudioEngine::play_tone(uint16_t frequency)
+{
+    if (frequency == 0)
+    {
+        noTone(AUDIO_PIN);
+        digitalWrite(AUDIO_PIN, LOW);
+    }
+    else
+    {
+        tone(AUDIO_PIN, frequency);
+    }
+}
+
+uint16_t AudioEngine::decompress_frequency(int note_index) const
 {
     const uint32_t bitIndex = note_index * BITS_PER_SEMITONE;
     const uint32_t semitoneIndex = decompress(compressedSemitones, bitIndex, BITS_PER_SEMITONE);
@@ -44,7 +58,7 @@ int AudioEngine::decompress_frequency(int note_index) const
     return pgm_read_word(semitoneFrequencyTable + semitoneIndex);
 }
 
-int AudioEngine::decompress_duration(int note_index) const
+uint16_t AudioEngine::decompress_duration(int note_index) const
 {
     const uint32_t bitIndex = note_index * BITS_PER_DURATION;
     const uint32_t durationIndex = decompress(compressedDurations, bitIndex, BITS_PER_DURATION);
@@ -52,9 +66,9 @@ int AudioEngine::decompress_duration(int note_index) const
     return pgm_read_word(durationMsTable + durationIndex);
 }
 
-uint32_t AudioEngine::decompress(const uint8_t* buffer, uint32_t bitIndex, uint8_t numBits) const
+uint16_t AudioEngine::decompress(const uint8_t* buffer, uint32_t bitIndex, uint8_t numBits) const
 {
-    uint32_t result = 0;
+    uint16_t result = 0;
     uint8_t writeBit = 0;
 
     uint8_t remainingBits = numBits;
