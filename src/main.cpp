@@ -31,6 +31,9 @@ void setup()
     display.begin();
     score.init(display);
 
+    p1.init(A0, 0 , 652);
+    p2.init(A1, 29, 652);
+
     game_state.p1 = &p1;
     game_state.p2 = &p2;
     game_state.score = &score;
@@ -43,11 +46,8 @@ void setup()
 
 void loop()
 {
-    unsigned long const start = millis();
-    int8_t const dir = ((start & 0x3FF) >> 9) * 2 - 1;
-
-    p1.move_y(2 * dir);
-    p2.move_y(5 * dir);
+    p1.tick();
+    p2.tick();
     ball.update(game_state, display);
 
     ball.draw(display);
