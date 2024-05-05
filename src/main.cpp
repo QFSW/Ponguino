@@ -31,8 +31,8 @@ void setup()
     display.begin();
     score.init(display);
 
-    p1.init(A0, 0 , 652);
-    p2.init(A1, 29, 652);
+    p1.init(A0, 0  , 1022);
+    p2.init(A1, 125, 1022);
 
     game_state.p1 = &p1;
     game_state.p2 = &p2;
