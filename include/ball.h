@@ -2,10 +2,6 @@
 
 #include "game_state.h"
 
-#define BALL_WIDTH 2
-#define BALL_SPEED_X 3
-#define BALL_SPEED_Y_MAX 6
-
 class Display;
 class Score;
 

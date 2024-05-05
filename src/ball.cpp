@@ -4,11 +4,16 @@
 #include "paddle.h"
 #include "score.h"
 
-#define BALL_END_X SCREEN_WIDTH - BALL_WIDTH
-#define BALL_END_Y BLUE_HEIGHT - BALL_WIDTH
+#define BALL_WIDTH 2
+#define BALL_SPEED_X 4
+#define BALL_SPEED_Y_MAX 7
+#define BALL_SPEED_INIT 3
 
-#define INITIAL_X SCREEN_WIDTH / 2 - BALL_WIDTH / 2
-#define INITIAL_y BLUE_HEIGHT / 2 - BALL_WIDTH / 2
+#define BALL_END_X (SCREEN_WIDTH - BALL_WIDTH)
+#define BALL_END_Y (BLUE_HEIGHT - BALL_WIDTH)
+
+#define INITIAL_X (SCREEN_WIDTH / 2 - BALL_WIDTH / 2)
+#define INITIAL_y (BLUE_HEIGHT / 2 - BALL_WIDTH / 2)
 
 Ball::Ball()
 {
@@ -42,7 +47,7 @@ void Ball::update(GameState& game_state, Display& display)
     )
     {
         _x = p1_x + PADDLE_WIDTH;
-        _speed_x = abs(_speed_x);
+        _speed_x = BALL_SPEED_X;
         
         const int8_t delta_y = _y - p1_y - PADDLE_HEIGHT / 2;
         _speed_y = delta_y * BALL_SPEED_Y_MAX / (PADDLE_HEIGHT / 2);
@@ -62,7 +67,7 @@ void Ball::update(GameState& game_state, Display& display)
     )
     {
         _x = p2_x - 1;
-        _speed_x = -1 * abs(_speed_x);
+        _speed_x = -BALL_SPEED_X;
 
         const int8_t delta_y = _y - p2_y - PADDLE_HEIGHT / 2;
         _speed_y = delta_y * BALL_SPEED_Y_MAX / (PADDLE_HEIGHT / 2);
@@ -97,6 +102,6 @@ void Ball::init()
     _x = INITIAL_X;
     _y = INITIAL_y;
 
-    _speed_x = BALL_SPEED_X * (random(0, 2) * 2 - 1);
-    _speed_y = random(-BALL_SPEED_X, BALL_SPEED_X + 1);
+    _speed_x = BALL_SPEED_INIT * (random(0, 2) * 2 - 1);
+    _speed_y = random(-BALL_SPEED_INIT, BALL_SPEED_INIT + 1);
 }
