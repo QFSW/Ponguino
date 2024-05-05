@@ -1,7 +1,10 @@
 #include <inttypes.h>
 
-#define PADDLE_HEIGHT 12
+#define PADDLE_HEIGHT 13
 #define PADDLE_WIDTH 3
+
+#define STABILIZE_WINDOW 1
+#define STABILIZE_LENGTH 3
 
 class Display;
 
@@ -25,6 +28,7 @@ private:
     float _pot_mul;
     uint16_t _pot_min;
     uint8_t _pot_pin;
+    uint8_t _stabilize_frames;
 
     int8_t _x;
     int8_t _y;

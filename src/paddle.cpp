@@ -3,7 +3,8 @@
 #include "display.h"
 
 Paddle::Paddle(int8_t x)
-    : _x(x)
+    : _stabilize_frames(0)
+    , _x(x)
     , _y(BLUE_HEIGHT / 2)
 { }
 
@@ -27,8 +28,29 @@ void Paddle::tick()
 
 void Paddle::set_y(int8_t y)
 {
-    _y = min(y, BLUE_HEIGHT - PADDLE_HEIGHT);
-    _y = max(_y, 0);
+    int8_t new_y = min(y, BLUE_HEIGHT - PADDLE_HEIGHT);
+    new_y = max(new_y, 0);
+
+    // If the new value is sufficiently different, apply immediately
+    // otherwise wait until we've been at the new value for some amount of time
+    // this helps to filter out wobble from electrical noise
+    if (abs(new_y - _y) > STABILIZE_WINDOW)
+    {
+        _y = new_y;
+        _stabilize_frames = 0;
+    }
+    else if (new_y == _y)
+    {
+        _stabilize_frames = 0;
+    }
+    else
+    {
+        if (++_stabilize_frames >= STABILIZE_LENGTH)
+        {
+            _y = new_y;
+            _stabilize_frames = 0;
+        }
+    }
 }
 
 void Paddle::move_y(int8_t y_delta)
