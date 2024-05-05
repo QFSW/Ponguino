@@ -1,13 +1,9 @@
 #include <inttypes.h>
 
-#define CHAR_MAG 2
-#define CHAR_WIDTH 6 * CHAR_MAG
-#define CHAR_HEIGHT 8 * CHAR_MAG
-
-#define P1_SCORE_START (SCREEN_WIDTH / 2 - (int)(CHAR_WIDTH * 2.5))
-#define P2_SCORE_START P1_SCORE_START + 4 * CHAR_WIDTH
-
 class Display;
+
+#define MAX_DIGITS 3
+#define MAX_SCORE 999
 
 class Score
 {
@@ -18,9 +14,11 @@ public:
     void inc_p2(Display& display);
 
 private:
-    void set_score(uint8_t score, uint8_t start, Display& display);
+    // Decomposes number into reverse stack of digits
+    // i.e 15 --> [5, 1, 0]
+    void get_digits_rv(uint16_t score_in, uint8_t digits_rv_out[MAX_DIGITS], uint8_t& num_out);
+    void write_digits(Display& display, uint8_t start, uint8_t digits_rv[MAX_DIGITS], uint8_t num_digits);
 
-    uint8_t _p1_score;
-    uint8_t _p2_score;
-    char _score_buf[6];
+    uint16_t _p1_score;
+    uint16_t _p2_score;
 };
