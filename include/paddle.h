@@ -3,8 +3,8 @@
 #define PADDLE_HEIGHT 13
 #define PADDLE_WIDTH 3
 
-#define STABILIZE_WINDOW 1
-#define STABILIZE_LENGTH 3
+#define STABILIZE_WINDOW 2
+#define STABILIZE_LENGTH 5
 
 class Display;
 

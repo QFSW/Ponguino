@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Adafruit_SSD1306.h>
+#include <Arduino.h>
 
 #define SCREEN_WIDTH    128
 #define SCREEN_HEIGHT   64
@@ -10,23 +10,28 @@
 #define BLUE_START      16
 
 #define OLED_RESET      -1
-#define SCREEN_ADDRESS  0x3C
+#define OLED_ADDR       0x3C
+
+#define BACK_BUFFER_SIZE ((SCREEN_WIDTH * SCREEN_HEIGHT / 8) + 1)
 
 class Display
 {
 public:
-    Display();
+    Display(uint8_t* back_buffer);
 
     void begin();
 
     void flush();
     void clear();
 
-    void set_pixel(u8 x, u8 y);
-    void clear_pixel(u8 x, u8 y);
-
-    Adafruit_SSD1306& get_inner() { return _display;  }
+    void print(uint8_t x, uint8_t y, const char* str);
+    void print_char(uint8_t x, uint8_t y, char c);
+    void write_pixel(uint8_t x, uint8_t y, bool high);
+    void fill_rect(uint8_t x, uint8_t y, uint8_t width, uint8_t height, bool high);
 
 private:
-    Adafruit_SSD1306 _display;
+    void i2c_write(const uint8_t* data, int len);
+
+    uint8_t* _full_buffer;
+    uint8_t* _data_buffer;
 };

@@ -11,8 +11,10 @@
 #define USE_TIMER_1 true
 #include "TimerInterrupt.h"
 
+uint8_t display_back_buffer[BACK_BUFFER_SIZE];
+
 AudioEngine audio_engine;
-Display display;
+Display display(display_back_buffer);
 
 Paddle p1(4);
 Paddle p2(SCREEN_WIDTH - 4 - PADDLE_WIDTH);
@@ -46,6 +48,10 @@ void setup()
 
 void loop()
 {
+    // Target 120Hz
+    int const target_frametime_us = 8333;
+    int frame_start_us = micros();
+
     p1.tick();
     p2.tick();
     ball.update(game_state, display);
@@ -55,4 +61,10 @@ void loop()
     p2.draw(display);
 
     display.flush();
+
+    int elapsed_us = micros() - frame_start_us;
+    if (elapsed_us < target_frametime_us)
+    {
+        delayMicroseconds(target_frametime_us - elapsed_us);
+    }
 }

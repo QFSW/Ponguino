@@ -16,10 +16,11 @@ public:
 private:
     void init();
 
-    int16_t _x;
-    int16_t _y;
+    float _x;
+    float _y;
+    float _speed_x;
+    float _speed_y;
+
     uint8_t _x_old;
     uint8_t _y_old;
-    int8_t _speed_x;
-    int8_t _speed_y;
 };

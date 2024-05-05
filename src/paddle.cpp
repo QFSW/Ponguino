@@ -60,8 +60,8 @@ void Paddle::move_y(int8_t y_delta)
 
 void Paddle::draw(Display& display)
 {
-    display.get_inner().fillRect(_x, BLUE_START + _y_old, PADDLE_WIDTH, PADDLE_HEIGHT, SSD1306_BLACK);
-    display.get_inner().fillRect(_x, BLUE_START + _y, PADDLE_WIDTH, PADDLE_HEIGHT, SSD1306_WHITE);
+    display.fill_rect(_x, BLUE_START + _y_old, PADDLE_WIDTH, PADDLE_HEIGHT, false);
+    display.fill_rect(_x, BLUE_START + _y, PADDLE_WIDTH, PADDLE_HEIGHT, true);
 
     _y_old = _y;
 }
